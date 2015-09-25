@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 /**
  * Created by Kaj on 24/09/15.
  */
@@ -37,7 +39,7 @@ public class UnitService {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Unit> create(@RequestBody Unit unit) {
+    public ResponseEntity<Unit> create(@Valid @RequestBody Unit unit) {
         LOG.info("/units create method called");
         Unit createdUnit = repo.save(unit);
         return new ResponseEntity<>(createdUnit, HttpStatus.OK);
@@ -50,7 +52,8 @@ public class UnitService {
         if (update == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         update.setName(unit.getName());
-        return new ResponseEntity<>(update, HttpStatus.OK);
+        Unit updatedUnit = repo.save(update);
+        return new ResponseEntity<>(updatedUnit, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "{id}")
